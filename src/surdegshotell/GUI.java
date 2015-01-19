@@ -13,15 +13,18 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
 /**
- *
+ * GUI for the Surdegshotel application
  * @author Erik
+ * @verision 2015-01-19
  */
 public class GUI extends JFrame {
+    //main panels of the gui
     private final JTabbedPane panel = new JTabbedPane();
     private final JPanel _checkInOut = new JPanel(new BorderLayout());
     private final JPanel _mending = new JPanel(new BorderLayout());
     private final JPanel _statistics = new JPanel(new BorderLayout());
     
+    //Components for the checkinout tabb
     private final DefaultListModel _checkInListModel = new DefaultListModel();
     private final JList _checkInList = new JList(_checkInListModel); 
     private final JScrollPane _checkInScrollbar = new JScrollPane(_checkInList);
@@ -29,17 +32,22 @@ public class GUI extends JFrame {
     private final JButton _checkInButton = new JButton("Check In");
     private final JButton _checkOutButton = new JButton("Check Out");
     
+    //components for the mending tabb
     private final DefaultListModel _mendingListModel = new DefaultListModel();
     private final JList _mendingList = new JList(_mendingListModel);
     private final JScrollPane _mendingScrollbar = new JScrollPane(_mendingList);
     private final JButton _mendingDoneButton = new JButton("Done");
     
+    // components for the statistics tabb
     private final JTextField _statisticsFrom = new JTextField("From");
     private final JTextField _statisticsTo = new JTextField("to");
     private final JTextField _priceTextField = new JTextField("price");
     private final JButton _priceSubmittButton = new JButton("Submitt");
     private final JButton _statisticsGetButton = new JButton("Get Statistics");
     
+    /**
+     * Constructor for GUI initializes the constructions of the GUI components
+     */
     public GUI(){
         setTitle("Sourdough hotel");
         fillGUI();
@@ -49,6 +57,9 @@ public class GUI extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
     
+    /**
+     * initializes the construction of each induvidual tabb
+     */
     private void fillGUI(){
         add(panel);
         panel.setPreferredSize(new Dimension(700, 400));
@@ -60,6 +71,9 @@ public class GUI extends JFrame {
         createStatistics();
     }
 
+    /**
+     * constructs the checkinout tabb
+     */
     private void createCheckinOut() {
         for (int i = 0; i < 7; i++) {
             _checkInFields.add(new JTextField("Testing"));
@@ -77,6 +91,9 @@ public class GUI extends JFrame {
         _checkInOut.add(_checkOutButton, BorderLayout.SOUTH);
     }
 
+    /**
+     * constructs the mending tabb
+     */
     private void createMending() {
         _mendingList.setPreferredSize(new Dimension(350, 250));
         _mendingScrollbar.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -84,6 +101,9 @@ public class GUI extends JFrame {
         _mending.add(_mendingDoneButton, BorderLayout.SOUTH);
     }
 
+    /**
+     * constructs the statistics tabb
+     */
     private void createStatistics() {
         _statisticsFrom.setPreferredSize(new Dimension(100, 25));
         _statisticsTo.setPreferredSize(new Dimension(100, 25));
