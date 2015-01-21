@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package surdegshotell;
 
 /**
@@ -10,5 +5,12 @@ package surdegshotell;
  * @author Erik
  */
 public class StringHandler {
-    
+    public static String convertToString(String[] stringList){
+        StringBuilder returnString = new StringBuilder();
+        for (String string : stringList) {
+            returnString.append(string+";");
+        }
+        returnString.deleteCharAt(returnString.length()-1);
+        return returnString.toString();
+    }
 }
