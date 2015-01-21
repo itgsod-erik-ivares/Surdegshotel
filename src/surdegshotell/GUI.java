@@ -2,6 +2,9 @@ package surdegshotell;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -18,6 +21,8 @@ import javax.swing.JTextField;
  * @verision 2015-01-19
  */
 public class GUI extends JFrame {
+    private final Surdegshotell _main;
+    
     //main panels of the gui
     private final JTabbedPane panel = new JTabbedPane();
     private final JPanel _checkInOut = new JPanel(new BorderLayout());
@@ -49,8 +54,10 @@ public class GUI extends JFrame {
      * Constructor for GUI initializes the constructions of the GUI components
      */
     public GUI(){
+        _main = new Surdegshotell();
         setTitle("Sourdough hotel");
         fillGUI();
+        addActionListners();
         pack();
         setVisible(true);
         setLocationRelativeTo(null);
@@ -75,9 +82,15 @@ public class GUI extends JFrame {
      * constructs the checkinout tabb
      */
     private void createCheckinOut() {
-        for (int i = 0; i < 7; i++) {
-            _checkInFields.add(new JTextField("Testing"));
-        }
+        _checkInFields.add(new JTextField("Name"));
+        _checkInFields.add(new JTextField("Address"));
+        _checkInFields.add(new JTextField("Number"));
+        _checkInFields.add(new JTextField("E-Mail"));
+        _checkInFields.add(new JTextField("Interval"));
+        _checkInFields.add(new JTextField("Flour"));
+        _checkInFields.add(new JTextField("Flour amount"));
+        _checkInFields.add(new JTextField("Water amount"));
+        _checkInFields.add(new JTextField("Special Request"));
         _checkInList.setPreferredSize(new Dimension(350, 250));
         _checkInScrollbar.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         _checkInOut.add(_checkInList, BorderLayout.NORTH);
@@ -119,5 +132,20 @@ public class GUI extends JFrame {
         centerStatisticsPanel.add(_statisticsGetButton);
         southStatisticsPanel.add(_priceTextField, BorderLayout.SOUTH);
         southStatisticsPanel.add(_priceSubmittButton, BorderLayout.SOUTH);
+    }
+    
+    private void addActionListners(){
+        _checkInButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("test");
+                try{
+                    _main.checkIn(_checkInFields);
+                }
+                catch(InvalidParameterException ipe){
+                    System.out.println("somthing went wrong :§");
+                }
+            }
+        });
     }
 }
