@@ -13,4 +13,13 @@ public class StringHandler {
         returnString.deleteCharAt(returnString.length()-1);
         return returnString.toString();
     }
+    
+    public static String fixString(String inputString){
+        StringBuilder returnString = new StringBuilder();
+        String[] stringList = inputString.split(";");
+        for (String string : stringList) {
+            returnString.append(string+ " | ");
+        }
+        return returnString.toString();
+    }
 }
