@@ -4,6 +4,7 @@ import java.security.InvalidParameterException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.logging.FileHandler;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -14,6 +15,8 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Surdegshotell {
     
+    private int _topID = 0; 
+    
     /**
      * starts the application.
      * @param args the command line arguments
@@ -23,7 +26,22 @@ public class Surdegshotell {
     }
     
     public Surdegshotell(){
-        
+        _topID = getTopID();
+    }
+    
+    public int getTopID(){
+        int returnInt = 0;
+        ArrayList<String> list = FileManager.readFile("CheckedIn.txt");
+        for (String string : list) {
+            if (string.charAt(0) == '﻿') {
+                string = string.replaceFirst("^[﻿]", "");
+            }
+            String[] splitString = string.split(";");
+            if (Integer.parseInt(splitString[0]) > _topID) {
+                returnInt = Integer.parseInt(splitString[0]);
+            }
+        }
+        return returnInt;
     }
     
     /**
@@ -31,7 +49,8 @@ public class Surdegshotell {
      * @param input 
      */
     public void checkIn(ArrayList<JTextField> input){
-        System.out.println("values tacken in");
+        System.out.println("Checking in values");
+        int id = ++_topID;
         String name = input.get(0).getText();
         String address = input.get(1).getText();
         String number = input.get(2).getText();
@@ -47,19 +66,20 @@ public class Surdegshotell {
             Validator.validateInt(flourAmount) &&
             Validator.validateInt(waterAmount)) {
             System.out.println("values passed validation");
-            String[] list = new String[10];
-            list[0] = name;
-            list[1] = address;
-            list[2] = number;
-            list[3] = email;
-            list[4] = interval;
-            list[5] = flourType;
-            list[6] = flourAmount;
-            list[7] = waterAmount;
-            list[8] = specialRequest;
+            String[] list = new String[11];
+            list[0] =  "" + id;
+            list[1] = name;
+            list[2] = address;
+            list[3] = number;
+            list[4] = email;
+            list[5] = interval;
+            list[6] = flourType;
+            list[7] = flourAmount;
+            list[8] = waterAmount;
+            list[9] = specialRequest;
             Date date = new Date();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            list[9] = sdf.format(date);
+            list[10] = sdf.format(date);
             FileManager.writeToFile("CheckedIn.txt", StringHandler.convertToString(list));
             System.out.println("values saved to file");
         }
@@ -73,7 +93,22 @@ public class Surdegshotell {
      * @param sourdough 
      */
     public void checkOut(String sourdough){
-        
+        String[] outdough = sourdough.split(";");
+        ArrayList<String> checkedInDoughs = FileManager.readFile("CheckedIn.txt");
+        for (String dough : checkedInDoughs) {
+            String fixedDough = "";
+            if (dough.charAt(0) == '﻿') {
+                fixedDough = dough.replaceFirst("^[﻿]", "");
+            }
+            else{
+                fixedDough = dough;
+            }
+            String[] thisdough = fixedDough.split(";");
+            if (outdough[0].equals(thisdough[0])) {
+                FileManager.removeLine("CheckedIn.txt", dough);
+                FileManager.writeToFile("CheckedOut", fixedDough);
+            }
+        }
     }
     
     /**
