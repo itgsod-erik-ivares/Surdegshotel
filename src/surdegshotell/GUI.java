@@ -14,6 +14,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.ScrollPaneConstants;
 
 /**
  * GUI for the Surdegshotel application
@@ -22,6 +24,7 @@ import javax.swing.JTextField;
  */
 public class GUI extends JFrame {
     private final Surdegshotell _main;
+    private ArrayList<String> _checkedInDoughs = new ArrayList();
     
     //main panels of the gui
     private final JTabbedPane panel = new JTabbedPane();
@@ -63,6 +66,7 @@ public class GUI extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
+
     
     /**
      * initializes the construction of each induvidual tabb
@@ -76,6 +80,7 @@ public class GUI extends JFrame {
         createCheckinOut();
         createMending();
         createStatistics();
+        updateList();
     }
 
     /**
@@ -134,16 +139,40 @@ public class GUI extends JFrame {
         southStatisticsPanel.add(_priceSubmittButton, BorderLayout.SOUTH);
     }
     
+    public void updateList(){
+        _checkInListModel.removeAllElements();
+        _checkedInDoughs = FileManager.readFile("CheckedIn.txt");
+        for (String string : _checkedInDoughs) {
+            _checkInListModel.addElement(StringHandler.fixString(string));
+        }
+    }
+    
     private void addActionListners(){
         _checkInButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("test");
+                System.out.println("***Checking in:***");
                 try{
                     _main.checkIn(_checkInFields);
+                    updateList();
                 }
                 catch(InvalidParameterException ipe){
                     System.out.println("somthing went wrong :§");
+                }
+            }
+        });
+        
+        _checkOutButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("***Checking Out:***");
+                try{
+                    _main.checkOut(_checkedInDoughs.get(_checkInList.getSelectedIndex()));
+                    updateList();
+                }
+                catch(Exception ex){
+                    System.out.println("Could nor check out dough");
                 }
             }
         });
