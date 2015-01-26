@@ -22,4 +22,11 @@ public class StringHandler {
         }
         return returnString.toString();
     }
+    
+    public static String add(String string, String add){
+        StringBuilder returnString = new StringBuilder();
+        returnString.append(string);
+        returnString.append(";" + add);
+        return returnString.toString();
+    }
 }
