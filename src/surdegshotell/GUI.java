@@ -2,6 +2,7 @@ package surdegshotell;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.security.InvalidParameterException;
@@ -9,7 +10,9 @@ import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -96,14 +99,14 @@ public class GUI extends JFrame {
         _checkInFields.add(new JTextField("Flour amount"));
         _checkInFields.add(new JTextField("Water amount"));
         _checkInFields.add(new JTextField("Special Request"));
-        _checkInList.setPreferredSize(new Dimension(350, 250));
-        _checkInScrollbar.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        _checkInOut.add(_checkInList, BorderLayout.NORTH);
+        _checkInScrollbar.setPreferredSize(new Dimension(350, 250));
+        _checkInScrollbar.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         JPanel checkInCenterPanel = new JPanel();
+        _checkInOut.add(_checkInScrollbar, BorderLayout.NORTH);
         _checkInOut.add(checkInCenterPanel, BorderLayout.CENTER);
         for (JTextField _checkInField : _checkInFields) {
             _checkInField.setPreferredSize(new Dimension(75, 25));
-            checkInCenterPanel.add(_checkInField, BorderLayout.CENTER);
+            checkInCenterPanel.add(_checkInField);
         }
         checkInCenterPanel.add(_checkInButton);
         _checkInOut.add(_checkOutButton, BorderLayout.SOUTH);
@@ -114,9 +117,13 @@ public class GUI extends JFrame {
      */
     private void createMending() {
         _mendingList.setPreferredSize(new Dimension(350, 250));
-        _mendingScrollbar.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+//        _mendingScrollbar.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         _mending.add(_mendingList, BorderLayout.NORTH);
         _mending.add(_mendingDoneButton, BorderLayout.SOUTH);
+        ArrayList<String> todaysDoughs = Sorter.getAllDoughsForToday();
+        for (String dough : todaysDoughs) {
+            _mendingListModel.addElement(dough);
+        }
     }
 
     /**
@@ -147,6 +154,31 @@ public class GUI extends JFrame {
         }
     }
     
+    private void showBill(String dough){
+        JFrame bill = new JFrame();
+        bill.setLayout(new FlowLayout());
+        ArrayList<String> billInfo = _main.createBill(dough);
+        for (String info : billInfo) {
+            bill.add(new JLabel(info));
+        }
+        bill.setTitle("Bill");
+        bill.setPreferredSize(new Dimension(200, 200));
+        JButton printButton = new JButton("Print to file");
+        bill.add(printButton);
+        printButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String[] list = dough.split(";");
+                for (String info : billInfo) {
+                    FileManager.writeToFile(list[1]+".txt", info);
+                }
+            }
+        });
+        bill.pack();
+        bill.setVisible(true);
+    }
+    
     private void addActionListners(){
         _checkInButton.addActionListener(new ActionListener() {
             @Override
@@ -168,8 +200,18 @@ public class GUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("***Checking Out:***");
                 try{
-                    _main.checkOut(_checkedInDoughs.get(_checkInList.getSelectedIndex()));
+                    String checkOutDough = _checkedInDoughs.get(_checkInList.getSelectedIndex());
+                    System.out.println("initiating main code");
+                    _main.checkOut(checkOutDough);
+                    System.out.println("uppdating list");
                     updateList();
+                    try{
+                        showBill(checkOutDough);
+                    }
+                    catch(ArrayIndexOutOfBoundsException aioobe){
+                        System.out.println(aioobe.getMessage());
+                        System.out.println(aioobe.fillInStackTrace());
+                    }
                 }
                 catch(Exception ex){
                     System.out.println("Could nor check out dough");
