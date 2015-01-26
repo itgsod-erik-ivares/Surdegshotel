@@ -36,7 +36,7 @@ public class GUI extends JFrame {
     private final DefaultListModel _checkInListModel = new DefaultListModel();
     private final JList _checkInList = new JList(_checkInListModel); 
     private final JScrollPane _checkInScrollbar = new JScrollPane(_checkInList);
-    private ArrayList<JTextField> _checkInFields = new ArrayList();
+    private final ArrayList<JTextField> _checkInFields = new ArrayList();
     private final JButton _checkInButton = new JButton("Check In");
     private final JButton _checkOutButton = new JButton("Check Out");
     
