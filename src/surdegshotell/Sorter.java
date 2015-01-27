@@ -13,37 +13,40 @@ import java.util.Date;
  */
 public class Sorter {
     private static int _price = 30;
+    private static DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
     
     public static ArrayList<String> getAllDoughsForToday(){
         ArrayList<String> returnList = new ArrayList();
         ArrayList<String> checkedInDoughs = FileManager.readFile("CheckedIn.txt");
-        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         Calendar today = Calendar.getInstance();
         for (String aDough : checkedInDoughs) {
             String[] dough = aDough.split(";");
-            try{
-                Date date = formatter.parse(dough[10]);
-                Calendar redistration = Calendar.getInstance();
-                redistration.setTime(date);
-                while(redistration.before(today)){
-                    int counter = 0;
-                    String regString = formatter.format(redistration.getTime());
-                    String todString = formatter.format(today.getTime());
-                    if(regString.equals(todString)){
-                        String countString = Integer.toString(counter);
-                        StringHandler.add(aDough, countString);
-                        returnList.add(aDough);
-                        System.out.println("dough added to mending");
-                        redistration.add(Calendar.DAY_OF_MONTH, Integer.parseInt(dough[5]));
-                    }
-                    else{
-                        redistration.add(Calendar.DAY_OF_MONTH, Integer.parseInt(dough[5]));
-                        counter++;
-                    }
+            String temp = dough[10];
+            System.out.println(dough[10]);
+            Date date = new Date(Long.parseLong(temp));
+            System.out.println(formatter.format(date) + " <-- Date test");
+            Calendar checkInDate = Calendar.getInstance();
+            checkInDate.setTime(date);
+            System.out.println(checkInDate.getTime());
+            while(checkInDate.before(today)){
+                System.out.println("test3");
+                int counter = 0;
+                String regString = formatter.format(checkInDate.getTime());
+                System.out.println(regString);
+                String todString = formatter.format(today.getTime());
+                System.out.println(todString);
+                if(regString.equals(todString)){
+                    System.out.println("test4");
+                    String countString = Integer.toString(counter);
+                    StringHandler.add(aDough, countString);
+                    returnList.add(aDough);
+                    System.out.println("dough added to mending");
+                    checkInDate.add(Calendar.DAY_OF_MONTH, Integer.parseInt(dough[5]));
                 }
-            }
-            catch(ParseException pe){
-                System.out.println("Could not parse date");
+                else{
+                    checkInDate.add(Calendar.DAY_OF_MONTH, Integer.parseInt(dough[5]));
+                    counter++;
+                }
             }
         }
         return returnList;
@@ -84,61 +87,48 @@ public class Sorter {
     public static ArrayList<String> getBillStatistics(String dough){
         ArrayList<String> returnList = new ArrayList();
         ArrayList<String> checkedOutDoughs = FileManager.readFile("CheckedOut.txt");
-        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        try{
-            for (String cod : checkedOutDoughs) {
-                String[] codList = cod.split(";");
-                String[] dList = dough.split(";");
-                
-                if (dList[0].charAt(0) == '﻿') {
-                    dList[0] = dList[0].replaceFirst("^[﻿]", "");
+        for (String cod : checkedOutDoughs) {
+            String[] codList = cod.split(";");
+            String[] dList = dough.split(";");
+            System.out.println("Dough ID: " + dList[0]);
+            System.out.println("Currents search item: "+ codList[0]);
+            if (codList[0].equals(dList[0])) {
+                System.out.println("Item found!");
+
+                Date ci = new Date(Long.parseLong(dList[10]));
+                Calendar cci = Calendar.getInstance();
+                cci.setTime(ci);
+
+                Calendar ccit = Calendar.getInstance();
+                ccit.setTime(ci);
+
+                Date co = new Date(Long.parseLong(codList[11]));
+                Calendar cco = Calendar.getInstance();
+                cco.setTime(co);
+
+                System.out.println("Checking mendings: ");
+                System.out.println(ccit.getTime());
+
+                int mendCounter = 0;
+                while(ccit.before(cco)){
+                    System.out.println(mendCounter);
+                    mendCounter++;
+                    ccit.add(Calendar.DAY_OF_MONTH, Integer.parseInt(codList[5]));
                 }
-                if (codList[0].charAt(0) == '﻿') {
-                    codList[0] = codList[0].replaceFirst("^[﻿]", "");
+                int daycounter = 0;
+                System.out.println("Checking days");
+                System.out.println(cci.getTime());
+                while (cci.before(cco)) {
+                    System.out.println(daycounter);
+                    daycounter++;
+                    cci.add(Calendar.DAY_OF_MONTH, 1);
                 }
-                System.out.println("Dough ID: " + dList[0]);
-                System.out.println("Currents search item: "+ codList[0]);
-                if (codList[0].equals(dList[0])) {
-                    System.out.println("Item found!");
-                    
-                    Date ci = formatter.parse(dList[10]);
-                    Calendar cci = Calendar.getInstance();
-                    cci.setTime(ci);
-                    
-                    Calendar ccit = Calendar.getInstance();
-                    ccit.setTime(ci);
-                    
-                    Date co = formatter.parse(codList[11]);
-                    Calendar cco = Calendar.getInstance();
-                    cco.setTime(co);
-                    
-                    System.out.println("checking mendings: ");
-                    System.out.println(ccit.getTime());
-                    
-                    int mendCounter = 0;
-                    while(ccit.before(cco)){
-                        System.out.println(mendCounter);
-                        mendCounter++;
-                        ccit.add(Calendar.DAY_OF_MONTH, Integer.parseInt(codList[5]));
-                    }
-                    int daycounter = 0;
-                    System.out.println("checking days");
-                    System.out.println(cci.getTime());
-                    while (cci.before(cco)) {
-                        System.out.println(daycounter);
-                        daycounter++;
-                        cci.add(Calendar.DAY_OF_MONTH, 1);
-                    }
-                    int cost = daycounter * _price;
-                    System.out.println("Price: " + cost);
-                    returnList.add(Integer.toString(cost));
-                    returnList.add(Integer.toString(mendCounter));
-                    
-                }
+                int cost = daycounter * _price;
+                System.out.println("Price: " + cost);
+                returnList.add(Integer.toString(cost));
+                returnList.add(Integer.toString(mendCounter));
+
             }
-        }
-        catch(ParseException pe){
-            System.out.println("Could not parse date");
         }
         for (String info : returnList) {
             System.out.println(info);
