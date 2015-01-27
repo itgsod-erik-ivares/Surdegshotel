@@ -132,8 +132,9 @@ public class Surdegshotell {
      * @param dateFrom
      * @param dateTo 
      */
-    public void getStatistics(String dateFrom, String dateTo){
-        
+    public ArrayList<String> getStatistics(String dateFrom, String dateTo){
+        ArrayList<String> returnList = Sorter.getDoughsFromTo(dateFrom, dateTo);
+        return returnList;
     }
     
     public ArrayList<String> createBill(String dough){
