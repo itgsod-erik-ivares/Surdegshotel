@@ -1,5 +1,6 @@
 package surdegshotell;
 
+import com.sun.javafx.binding.StringFormatter;
 import java.security.InvalidParameterException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,6 +29,9 @@ public class Surdegshotell {
     
     public Surdegshotell(){
         _topID = getTopID();
+        Calendar test = Calendar.getInstance();
+        test.add(Calendar.MONTH, -1);
+        System.out.println(test.getTimeInMillis()+ "");
     }
     
     public int getTopID(){
@@ -79,10 +83,7 @@ public class Surdegshotell {
             list[8] = waterAmount;
             list[9] = specialRequest;
             Calendar today = Calendar.getInstance();
-            list[10] = today.get(Calendar.YEAR) + "-"
-                    + (today.get(Calendar.MONTH)) + "-"
-                    + today.get(Calendar.DAY_OF_MONTH);
-            
+            list[10] = Long.toString(today.getTimeInMillis());
             System.out.println(list[10]);
             FileManager.writeToFile("CheckedIn.txt", StringHandler.convertToString(list));
             System.out.println("values saved to file");
@@ -111,9 +112,7 @@ public class Surdegshotell {
             if (outdough[0].equals(thisdough[0])) {
                 System.out.println("Sourdough Found!");
                 Calendar today = Calendar.getInstance();
-                String fixedDough = StringHandler.add(dough, today.get(Calendar.YEAR) +
-                        "-" + today.get(Calendar.MONTH) + 
-                        "-" + today.get(Calendar.DAY_OF_MONTH));
+                String fixedDough = StringHandler.add(dough, Long.toString(today.getTimeInMillis()));
                 System.out.println(fixedDough);
                 FileManager.removeLine("CheckedIn.txt", dough);
                 FileManager.writeToFile("CheckedOut.txt", fixedDough);
