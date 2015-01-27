@@ -119,7 +119,7 @@ public class GUI extends JFrame {
         _mending.add(_mendingDoneButton, BorderLayout.SOUTH);
         ArrayList<String> todaysDoughs = Sorter.getAllDoughsForToday();
         for (String dough : todaysDoughs) {
-            _mendingListModel.addElement(dough);
+            _mendingListModel.addElement(StringHandler.fixString(dough));
         }
     }
 
@@ -168,7 +168,7 @@ public class GUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String[] list = dough.split(";");
                 for (String info : billInfo) {
-                    FileManager.writeToFile(list[1]+".txt", info);
+                    FileManager.writeToFile(list[0]+".txt", info);
                 }
             }
         });
