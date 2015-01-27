@@ -27,7 +27,7 @@ public class Validator {
         boolean returnValue = false;
         try{
             Integer.parseInt(phoneNumber);
-            if (phoneNumber.length() > 5 && phoneNumber.length() < 14) {
+            if (phoneNumber.length() > 5 && phoneNumber.length() < 15) {
                 System.out.println("number: OK");
                 returnValue = true;
             }
