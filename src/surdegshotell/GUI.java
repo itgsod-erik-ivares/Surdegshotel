@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import javax.mail.MessagingException;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -45,6 +46,7 @@ public class GUI extends JFrame {
     private final JList _mendingList = new JList(_mendingListModel);
     private final JScrollPane _mendingScrollbar = new JScrollPane(_mendingList);
     private final JButton _mendingDoneButton = new JButton("Done");
+    private final ArrayList<String> _todaysDoughs = Sorter.getAllDoughsForToday();
     
     // components for the statistics tabb
     private final DefaultListModel _statisticsListModel = new DefaultListModel();
@@ -120,8 +122,7 @@ public class GUI extends JFrame {
 //        _mendingScrollbar.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         _mending.add(_mendingScrollbar, BorderLayout.NORTH);
         _mending.add(_mendingDoneButton, BorderLayout.SOUTH);
-        ArrayList<String> todaysDoughs = Sorter.getAllDoughsForToday();
-        for (String dough : todaysDoughs) {
+        for (String dough : _todaysDoughs) {
             _mendingListModel.addElement(StringHandler.fixString(dough));
         }
     }
@@ -240,6 +241,33 @@ public class GUI extends JFrame {
                 _statisticsListModel.addElement("Money earned: " + Integer.toString(gain));
                 _statisticsListModel.addElement("Mendings done: " + Integer.toString(mendings));
                 
+            }
+        });
+        
+        _mendingDoneButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try{
+                    for (String dough : _todaysDoughs){
+                        String[] splitdough = dough.split(";");
+                        String emailMessage = "Hey " + splitdough[1] + ", We Just mended you dough!\n"
+                                + "We have feeded it with " + splitdough[7] + "gr of \"" + splitdough[6] + "\" and "
+                                + splitdough[8] + "ml of water.\n";
+                        if (splitdough[9].length() > 1) {
+                            emailMessage = emailMessage + "we also performed you special request.";
+                        }
+                        GoogleMail.Send(splitdough[4], "SourdoughHotel! We mended your dough", emailMessage);
+                    }
+                }
+                catch(MessagingException me){
+                    System.out.println("Email sending FAILED!");
+                    System.out.println(me.toString());
+                    System.out.println(me.fillInStackTrace());
+                }
+                catch(Exception ex){
+                    System.out.println(ex.toString());
+                }
             }
         });
     }
