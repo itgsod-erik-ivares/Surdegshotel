@@ -47,6 +47,9 @@ public class GUI extends JFrame {
     private final JButton _mendingDoneButton = new JButton("Done");
     
     // components for the statistics tabb
+    private final DefaultListModel _statisticsListModel = new DefaultListModel();
+    private final JList _statisticsList = new JList(_statisticsListModel); 
+    private final JScrollPane _statisticsScrollbar = new JScrollPane(_statisticsList);
     private final JTextField _statisticsFrom = new JTextField("From");
     private final JTextField _statisticsTo = new JTextField("to");
     private final JTextField _priceTextField = new JTextField("price");
@@ -115,7 +118,7 @@ public class GUI extends JFrame {
     private void createMending() {
         _mendingList.setPreferredSize(new Dimension(350, 250));
 //        _mendingScrollbar.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        _mending.add(_mendingList, BorderLayout.NORTH);
+        _mending.add(_mendingScrollbar, BorderLayout.NORTH);
         _mending.add(_mendingDoneButton, BorderLayout.SOUTH);
         ArrayList<String> todaysDoughs = Sorter.getAllDoughsForToday();
         for (String dough : todaysDoughs) {
@@ -132,13 +135,17 @@ public class GUI extends JFrame {
         _priceTextField.setPreferredSize(new Dimension(100, 25));
         _priceSubmittButton.setPreferredSize(new Dimension(75, 50));
         _statisticsGetButton.setPreferredSize(new Dimension(150, 50));
+        _statisticsScrollbar.setPreferredSize(new Dimension(600, 200));
+        JPanel northStatisticsPanel = new JPanel();
         JPanel centerStatisticsPanel = new JPanel();
         JPanel southStatisticsPanel = new JPanel();
+        _statistics.add(northStatisticsPanel, BorderLayout.NORTH);
         _statistics.add(centerStatisticsPanel, BorderLayout.CENTER);
         _statistics.add(southStatisticsPanel, BorderLayout.SOUTH);
-        centerStatisticsPanel.add(_statisticsFrom);
-        centerStatisticsPanel.add(_statisticsTo);
-        centerStatisticsPanel.add(_statisticsGetButton);
+        northStatisticsPanel.add(_statisticsFrom);
+        northStatisticsPanel.add(_statisticsTo);
+        northStatisticsPanel.add(_statisticsGetButton);
+        centerStatisticsPanel.add(_statisticsScrollbar);
         southStatisticsPanel.add(_priceTextField, BorderLayout.SOUTH);
         southStatisticsPanel.add(_priceSubmittButton, BorderLayout.SOUTH);
     }
@@ -213,6 +220,26 @@ public class GUI extends JFrame {
                 catch(Exception ex){
                     System.out.println("Could nor check out dough");
                 }
+            }
+        });
+        
+        _statisticsGetButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("***Getting Statistics:***");
+                ArrayList<String> list = _main.getStatistics(_statisticsFrom.getText(), _statisticsTo.getText());
+                int gain = 0;
+                int mendings = 0;
+                for (String dough : list) {
+                    _statisticsListModel.addElement(StringHandler.fixString(dough));
+                    ArrayList<String> doughInfo = Sorter.getBillStatistics(dough);
+                    gain = gain + Integer.parseInt(doughInfo.get(0));
+                    mendings = mendings + Integer.parseInt(doughInfo.get(1));
+                }
+                _statisticsListModel.addElement("Money earned: " + Integer.toString(gain));
+                _statisticsListModel.addElement("Mendings done: " + Integer.toString(mendings));
+                
             }
         });
     }
