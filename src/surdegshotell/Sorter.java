@@ -55,8 +55,6 @@ public class Sorter {
     public static ArrayList<String> getDoughsFromTo(String from, String to){
         ArrayList<String> returnList = new ArrayList<>();
         ArrayList<String> checkedOutDoughs = FileManager.readFile("CheckedOut.txt");
-        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        Calendar today = Calendar.getInstance();
         try{
             Date dateTo = formatter.parse(to);
             Calendar calTo = Calendar.getInstance();
@@ -68,18 +66,16 @@ public class Sorter {
             calFrom.add(Calendar.DAY_OF_MONTH, -1);
             for (String adough : checkedOutDoughs) {
                 String[] dough = adough.split(";");
-                Date date = formatter.parse(dough[11]);
+                Date date = new Date(Long.parseLong(dough[11]));
                 Calendar checkOut = Calendar.getInstance();
                 checkOut.setTime(date);
-                while (checkOut.before(calTo)) {
-                    if (checkOut.before(calTo) && checkOut.after(calFrom)) {
-                        returnList.add(adough);
-                    }
+                if (checkOut.before(calTo) && checkOut.after(calFrom)) {
+                    returnList.add(adough);
                 }
             }
         }
         catch(ParseException pe){
-            System.out.println("Could not parse date");
+            System.out.println("Could not parse date when filtering");
         }
         return returnList;
     }
@@ -94,40 +90,29 @@ public class Sorter {
             System.out.println("Currents search item: "+ codList[0]);
             if (codList[0].equals(dList[0])) {
                 System.out.println("Item found!");
-
                 Date ci = new Date(Long.parseLong(dList[10]));
                 Calendar cci = Calendar.getInstance();
                 cci.setTime(ci);
-
                 Calendar ccit = Calendar.getInstance();
                 ccit.setTime(ci);
-
                 Date co = new Date(Long.parseLong(codList[11]));
                 Calendar cco = Calendar.getInstance();
                 cco.setTime(co);
-
                 System.out.println("Checking mendings: ");
-                System.out.println(ccit.getTime());
-
                 int mendCounter = 0;
                 while(ccit.before(cco)){
-                    System.out.println(mendCounter);
                     mendCounter++;
                     ccit.add(Calendar.DAY_OF_MONTH, Integer.parseInt(codList[5]));
                 }
                 int daycounter = 0;
                 System.out.println("Checking days");
-                System.out.println(cci.getTime());
                 while (cci.before(cco)) {
-                    System.out.println(daycounter);
                     daycounter++;
                     cci.add(Calendar.DAY_OF_MONTH, 1);
                 }
                 int cost = daycounter * _price;
-                System.out.println("Price: " + cost);
                 returnList.add(Integer.toString(cost));
                 returnList.add(Integer.toString(mendCounter));
-
             }
         }
         for (String info : returnList) {
