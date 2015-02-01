@@ -16,6 +16,18 @@ import java.util.Scanner;
  * @author Erik
  */
 public class FileManager {
+    
+    /**
+     * constructor for the file manager class
+     */
+    public FileManager() {
+    }
+    
+    /**
+     * srites the given string as a new line in the specified file
+     * @param file the file to add the string to
+     * @param line the string to be added as a line in the file
+     */
     public static void writeToFile(String file, String line){
         BufferedWriter output;
         try{
@@ -29,6 +41,12 @@ public class FileManager {
         }
     }
     
+    
+    /**
+     * reads a file and returns a list with all the lines of the file
+     * @param filename the name of the file that should be read
+     * @return a list containing all the lines of the file
+     */
     public static ArrayList<String> readFile(String filename){
         ArrayList<String> returnList = new ArrayList();
         try{
@@ -45,6 +63,11 @@ public class FileManager {
         return returnList;
     }
     
+    /**
+     * removes a line matching the specified line
+     * @param file the name of the file that contains the line
+     * @param lineToRemove the line to be removed
+     */
     public static void removeLine(String file, String lineToRemove){
     try {
         File inFile = new File(file);
