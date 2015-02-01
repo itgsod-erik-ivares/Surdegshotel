@@ -34,6 +34,17 @@ public class Surdegshotell {
      * cunstructor for sourdough class
      */
     public Surdegshotell(){
+        
+        FileManager.writeToFile("CheckedIn.txt", "8;Erik Ivares;Musserongången 215;0707512099;kirre_2008@live.se;2;Vetemjöl special;70;40;Skakas;1419664498596");
+        FileManager.writeToFile("CheckedIn.txt", "10;Erik Ivares;Musserongången 215;0707512099;kirre_2008@live.se;2;Vete mjöl;20;12;Special Request;1422360765756");
+        FileManager.writeToFile("CheckedIn.txt", "11;Erik Ivares;mussronggf;00707512099;kirre_2008@live.se;2;Vetemjöl;200;20;;1422446430567");
+        FileManager.writeToFile("CheckedIn.txt", "9;Erik Ivares;Musserongången 215;0707512099;kirre_2008@live.se;2;Vetemjöl special;70;40;Skakas;1419664498596");
+        FileManager.writeToFile("CheckedIn.txt", "12;Erik Ivares;Musserongången 215;0707512099;kirre_2008@live.se;2;Vete mjöl;20;12;Special Request;1422360765756");
+        FileManager.writeToFile("CheckedIn.txt", "13;Erik Ivares;mussronggf;00707512099;kirre_2008@live.se;2;Vetemjöl;200;20;;1422446430567");
+        FileManager.writeToFile("CheckedIn.txt", "14;Erik Ivares;Musserongången 215;0707512099;kirre_2008@live.se;2;Vetemjöl special;70;40;Skakas;1419664498596");
+        FileManager.writeToFile("CheckedOut.txt", "10;Name;Address;1234567890;E-Mail@mail.com;1;Flour;200;100;Special Request;1422345794527;1422346133339");
+        FileManager.writeToFile("CheckedOut.txt", "12;Name;Address;1234567890;E-Mail@mail.com;1;Flour;200;100;Special Request;1422345796080;1422346218794");
+        FileManager.writeToFile("CheckedOut.txt", "13;Name;Address;1234567890;E-Mail@mail.com;1;Flour;200;100;Special Request;1422345797442;1422346379191");
         _topID = getTopID();
         Calendar test = Calendar.getInstance();
         test.add(Calendar.MONTH, -1);
