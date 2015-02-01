@@ -8,13 +8,26 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- *
+ * a class used to sort doughs in diffrent ways
  * @author Erik
+ * @version 2015-02-01
  */
 public class Sorter {
     private static int _price = 30;
     private static DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
+    /**
+     * sets the price 
+     * @param _price the new price 
+     */
+    public static void setPrice(int _price) {
+        Sorter._price = _price;
+    }
     
+    /**
+     * returns all the doughs that are to be mended today
+     * @return ArratList<String> a list with all the doughs
+     */
     public static ArrayList<String> getAllDoughsForToday(){
         ArrayList<String> returnList = new ArrayList();
         ArrayList<String> checkedInDoughs = FileManager.readFile("CheckedIn.txt");
@@ -52,6 +65,12 @@ public class Sorter {
         return returnList;
     }
     
+    /**
+     * get all the doughs from the set date to the set datee
+     * @param from the date you whant the method to start sorting from
+     * @param to the date you whant the methosd to stop sorting at
+     * @return ArratList<String> a list with the doughs
+     */
     public static ArrayList<String> getDoughsFromTo(String from, String to){
         ArrayList<String> returnList = new ArrayList<>();
         ArrayList<String> checkedOutDoughs = FileManager.readFile("CheckedOut.txt");
@@ -80,6 +99,11 @@ public class Sorter {
         return returnList;
     }
     
+    /**
+     * gets the price and mendings of the dough
+     * @param dough the dough that you whant the statistics from
+     * @return AraryList<String> a list with the information index 0 = price and index 1 = mendings
+     */
     public static ArrayList<String> getBillStatistics(String dough){
         ArrayList<String> returnList = new ArrayList();
         ArrayList<String> checkedOutDoughs = FileManager.readFile("CheckedOut.txt");
