@@ -16,6 +16,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 /**
  * main class of the Sourdoughotel.
  * @author Erik
+ * @verision 2015-02-01
  */
 public class Surdegshotell {
     
@@ -29,6 +30,9 @@ public class Surdegshotell {
         new GUI();
     }
     
+    /**
+     * cunstructor for sourdough class
+     */
     public Surdegshotell(){
         _topID = getTopID();
         Calendar test = Calendar.getInstance();
@@ -36,6 +40,10 @@ public class Surdegshotell {
         System.out.println(test.getTimeInMillis()+ "");
     }
     
+    /**
+     * gets the top id of the inchecked doughs
+     * @return the highest id
+     */
     public int getTopID(){
         int returnInt = 1;
         ArrayList<String> list = FileManager.readFile("CheckedIn.txt");
@@ -52,8 +60,8 @@ public class Surdegshotell {
     }
     
     /**
-     * 
-     * @param input 
+     * checks in the given information as a dough
+     * @param input the information needed to create a dough
      */
     public void checkIn(ArrayList<JTextField> input){
         System.out.println("Checking in values");
@@ -96,8 +104,8 @@ public class Surdegshotell {
     }
     
     /**
-     * 
-     * @param sourdough 
+     * checks out the given dough
+     * @param sourdough the dough you want to check out
      */
     public void checkOut(String sourdough){
         String[] outdough = sourdough.split(";");
@@ -123,7 +131,10 @@ public class Surdegshotell {
     }
     
     /**
-     * 
+     * sends emails to all the owners of the mended doughs
+     * @param todaysDoughs a list with the doughs that where mended today
+     * @throws AddressException
+     * @throws MessagingException 
      */
     public void mendingDone(ArrayList<String> todaysDoughs) throws AddressException, MessagingException{
         for (String dough : todaysDoughs){
@@ -139,15 +150,21 @@ public class Surdegshotell {
     }
     
     /**
-     * 
-     * @param dateFrom
-     * @param dateTo 
+     * gets all the statistics from the specified date to the other spacified date. 
+     * @param dateFrom the date you want statistics from
+     * @param dateTothe date you wha statistics to
+     * @return ArratList<String> a list with the statistics
      */
     public ArrayList<String> getStatistics(String dateFrom, String dateTo){
         ArrayList<String> returnList = Sorter.getDoughsFromTo(dateFrom, dateTo);
         return returnList;
     }
     
+    /**
+     * creates a list with the information given by the sorter class
+     * @param dough the dough you want statistics on
+     * @return a list with the information
+     */
     public ArrayList<String> createBill(String dough){
         ArrayList<String> returnList = Sorter.getBillStatistics(dough);
         for (String info : returnList) {
@@ -161,6 +178,11 @@ public class Surdegshotell {
      * @param price 
      */
     public void setPrice(String price){
-        
+        try{
+            Sorter.setPrice(Integer.parseInt(price));
+        }
+        catch(Exception e){
+            System.out.println("could not set price");
+        }
     }
 }
