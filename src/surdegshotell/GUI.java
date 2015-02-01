@@ -151,7 +151,7 @@ public class GUI extends JFrame {
         southStatisticsPanel.add(_priceSubmittButton, BorderLayout.SOUTH);
     }
     
-    public void updateList(){
+    private void updateList(){
         _checkInListModel.removeAllElements();
         _checkedInDoughs = FileManager.readFile("CheckedIn.txt");
         for (String string : _checkedInDoughs) {
@@ -249,16 +249,7 @@ public class GUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try{
-                    for (String dough : _todaysDoughs){
-                        String[] splitdough = dough.split(";");
-                        String emailMessage = "Hey " + splitdough[1] + ", We Just mended you dough!\n"
-                                + "We have feeded it with " + splitdough[7] + "gr of \"" + splitdough[6] + "\" and "
-                                + splitdough[8] + "ml of water.\n";
-                        if (splitdough[9].length() > 1) {
-                            emailMessage = emailMessage + "we also performed you special request.";
-                        }
-                        GoogleMail.Send(splitdough[4], "SourdoughHotel! We mended your dough", emailMessage);
-                    }
+                    _main.mendingDone(_todaysDoughs);
                 }
                 catch(MessagingException me){
                     System.out.println("Email sending FAILED!");
