@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.logging.FileHandler;
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -123,8 +125,17 @@ public class Surdegshotell {
     /**
      * 
      */
-    public void mendingDone(){
-        
+    public void mendingDone(ArrayList<String> todaysDoughs) throws AddressException, MessagingException{
+        for (String dough : todaysDoughs){
+            String[] splitdough = dough.split(";");
+            String emailMessage = "Hey " + splitdough[1] + ", We Just mended you dough!\n"
+                    + "We have feeded it with " + splitdough[7] + "gr of \"" + splitdough[6] + "\" and "
+                    + splitdough[8] + "ml of water.\n";
+            if (splitdough[9].length() > 1) {
+                emailMessage = emailMessage + "we also performed you special request.";
+            }
+            GoogleMail.Send(splitdough[4], "SourdoughHotel! We mended your dough", emailMessage);
+        }
     }
     
     /**
