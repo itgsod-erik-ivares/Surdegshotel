@@ -21,7 +21,7 @@ import javax.swing.JTextField;
 /**
  * GUI for the Surdegshotel application
  * @author Erik
- * @verision 2015-01-19
+ * @verision 2015-02-01
  */
 public class GUI extends JFrame {
     private final Surdegshotell _main;
@@ -151,6 +151,9 @@ public class GUI extends JFrame {
         southStatisticsPanel.add(_priceSubmittButton, BorderLayout.SOUTH);
     }
     
+    /**
+     * uppdates the checkin list
+     */
     private void updateList(){
         _checkInListModel.removeAllElements();
         _checkedInDoughs = FileManager.readFile("CheckedIn.txt");
@@ -158,7 +161,10 @@ public class GUI extends JFrame {
             _checkInListModel.addElement(StringHandler.fixString(string));
         }
     }
-    
+    /**
+     * creates the bill window and all its content
+     * @param dough the dough that the bill is about
+     */
     private void showBill(String dough){
         JFrame bill = new JFrame();
         bill.setLayout(new FlowLayout());
@@ -184,6 +190,9 @@ public class GUI extends JFrame {
         bill.setVisible(true);
     }
     
+    /**
+     * adds action listeners to the buttons
+     */
     private void addActionListners(){
         _checkInButton.addActionListener(new ActionListener() {
             @Override
