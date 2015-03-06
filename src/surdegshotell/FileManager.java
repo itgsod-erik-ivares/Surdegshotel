@@ -36,8 +36,8 @@ public class FileManager {
             output.newLine();
             output.close();
         }
-        catch(IOException ioe){
-            System.out.println("Chould not find file!!!");
+        catch(IOException ignore){
+            //do nothing.
         }
     }
     
@@ -57,8 +57,8 @@ public class FileManager {
             }
             myScanner.close();
         }
-        catch(FileNotFoundException fnfe){
-                System.out.println("File Not found");
+        catch(FileNotFoundException ignore){
+            //do nothing.
         }
         return returnList;
     }
@@ -72,7 +72,6 @@ public class FileManager {
     try {
         File inFile = new File(file);
         if (!inFile.isFile()) {
-            System.out.println("Parameter is not an existing file");
             return;
         }
         //Construct the new file that will later be renamed to the original filename.
@@ -92,12 +91,10 @@ public class FileManager {
         br.close();
         //Delete the original file
         if (!inFile.delete()) {
-            System.out.println("Could not delete file");
             return;
         }
         //Rename the new file to the filename the original file had.
         if (!tempFile.renameTo(inFile)){
-          System.out.println("Could not rename file");
         }
     }
     catch (FileNotFoundException ex) {
