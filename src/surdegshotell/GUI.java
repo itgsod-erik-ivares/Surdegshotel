@@ -6,6 +6,7 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.security.InvalidParameterException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import javax.mail.MessagingException;
 import javax.swing.DefaultListModel;
@@ -13,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -197,13 +199,15 @@ public class GUI extends JFrame {
         _checkInButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("***Checking in:***");
                 try{
                     _main.checkIn(_checkInFields);
                     updateList();
                 }
                 catch(InvalidParameterException ipe){
-                    System.out.println("somthing went wrong :§");
+                    JOptionPane.showMessageDialog(null,
+                    "The application was unable to check in dough",
+                    "Invalid Parameter Exception",
+                    JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -212,23 +216,25 @@ public class GUI extends JFrame {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("***Checking Out:***");
                 try{
                     String checkOutDough = _checkedInDoughs.get(_checkInList.getSelectedIndex());
-                    System.out.println("initiating main code");
                     _main.checkOut(checkOutDough);
-                    System.out.println("uppdating list");
                     updateList();
                     try{
                         showBill(checkOutDough);
                     }
                     catch(ArrayIndexOutOfBoundsException aioobe){
-                        System.out.println(aioobe.getMessage());
-                        System.out.println(aioobe.fillInStackTrace());
+                        JOptionPane.showMessageDialog(null,
+                        "The application was unable to create the bill.",
+                        "Could not show bill",
+                        JOptionPane.ERROR_MESSAGE);
                     }
                 }
                 catch(Exception ex){
-                    System.out.println("Could nor check out dough");
+                    JOptionPane.showMessageDialog(null,
+                    "The application was unable to check out the dough",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -237,18 +243,25 @@ public class GUI extends JFrame {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("***Getting Statistics:***");
-                ArrayList<String> list = _main.getStatistics(_statisticsFrom.getText(), _statisticsTo.getText());
-                int gain = 0;
-                int mendings = 0;
-                for (String dough : list) {
-                    _statisticsListModel.addElement(StringHandler.fixString(dough));
-                    ArrayList<String> doughInfo = Sorter.getBillStatistics(dough);
-                    gain = gain + Integer.parseInt(doughInfo.get(0));
-                    mendings = mendings + Integer.parseInt(doughInfo.get(1));
+                try{
+                    ArrayList<String> list = _main.getStatistics(_statisticsFrom.getText(), _statisticsTo.getText());
+                    int gain = 0;
+                    int mendings = 0;
+                    for (String dough : list) {
+                        _statisticsListModel.addElement(StringHandler.fixString(dough));
+                        ArrayList<String> doughInfo = Sorter.getBillStatistics(dough);
+                        gain = gain + Integer.parseInt(doughInfo.get(0));
+                        mendings = mendings + Integer.parseInt(doughInfo.get(1));
+                    }
+                    _statisticsListModel.addElement("Money earned: " + Integer.toString(gain));
+                    _statisticsListModel.addElement("Mendings done: " + Integer.toString(mendings));
                 }
-                _statisticsListModel.addElement("Money earned: " + Integer.toString(gain));
-                _statisticsListModel.addElement("Mendings done: " + Integer.toString(mendings));
+                catch(ParseException pe){
+                    JOptionPane.showMessageDialog(null,
+                    "One or two Dates were not correctly formatted. Correct format is: 'YYYY-MM-DD'.",
+                    "Parse Error",
+                    JOptionPane.ERROR_MESSAGE);
+                }
                 
             }
         });
@@ -261,12 +274,16 @@ public class GUI extends JFrame {
                     _main.mendingDone(_todaysDoughs);
                 }
                 catch(MessagingException me){
-                    System.out.println("Email sending FAILED!");
-                    System.out.println(me.toString());
-                    System.out.println(me.fillInStackTrace());
+                    JOptionPane.showMessageDialog(null,
+                    "The application could not sent email.",
+                    "Messaging Exception",
+                    JOptionPane.ERROR_MESSAGE);
                 }
                 catch(Exception ex){
-                    System.out.println(ex.toString());
+                    JOptionPane.showMessageDialog(null,
+                    "There was an error.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
