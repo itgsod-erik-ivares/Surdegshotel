@@ -2,6 +2,7 @@ package surdegshotell;
 
 import com.sun.javafx.binding.StringFormatter;
 import java.security.InvalidParameterException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -48,7 +49,6 @@ public class Surdegshotell {
         _topID = getTopID();
         Calendar test = Calendar.getInstance();
         test.add(Calendar.MONTH, -1);
-        System.out.println(test.getTimeInMillis()+ "");
     }
     
     /**
@@ -75,7 +75,6 @@ public class Surdegshotell {
      * @param input the information needed to create a dough
      */
     public void checkIn(ArrayList<JTextField> input){
-        System.out.println("Checking in values");
         int id = ++_topID;
         String name = input.get(0).getText();
         String address = input.get(1).getText();
@@ -91,7 +90,6 @@ public class Surdegshotell {
             Validator.validateInt(interval) &&
             Validator.validateInt(flourAmount) &&
             Validator.validateInt(waterAmount)) {
-            System.out.println("values passed validation");
             String[] list = new String[11];
             list[0] =  "" + id;
             list[1] = name;
@@ -105,9 +103,7 @@ public class Surdegshotell {
             list[9] = specialRequest;
             Calendar today = Calendar.getInstance();
             list[10] = Long.toString(today.getTimeInMillis());
-            System.out.println(list[10]);
             FileManager.writeToFile("CheckedIn.txt", StringHandler.convertToString(list));
-            System.out.println("values saved to file");
         }
         else {
             throw new InvalidParameterException();
@@ -120,21 +116,15 @@ public class Surdegshotell {
      */
     public void checkOut(String sourdough){
         String[] outdough = sourdough.split(";");
-        System.out.println("1 test");
         ArrayList<String> checkedInDoughs = FileManager.readFile("CheckedIn.txt");
         for (String dough : checkedInDoughs) {
-            System.out.println("2 test");
             if (dough.charAt(0) == '﻿') {
-                System.out.println("3 test");
                 dough = dough.replaceFirst("^[﻿]", "");
             }
-            System.out.println("4 test");
             String[] thisdough = dough.split(";");
             if (outdough[0].equals(thisdough[0])) {
-                System.out.println("Sourdough Found!");
                 Calendar today = Calendar.getInstance();
                 String fixedDough = StringHandler.add(dough, Long.toString(today.getTimeInMillis()));
-                System.out.println(fixedDough);
                 FileManager.removeLine("CheckedIn.txt", dough);
                 FileManager.writeToFile("CheckedOut.txt", fixedDough);
             }
@@ -166,7 +156,7 @@ public class Surdegshotell {
      * @param dateTothe date you wha statistics to
      * @return ArratList<String> a list with the statistics
      */
-    public ArrayList<String> getStatistics(String dateFrom, String dateTo){
+    public ArrayList<String> getStatistics(String dateFrom, String dateTo) throws ParseException{
         ArrayList<String> returnList = Sorter.getDoughsFromTo(dateFrom, dateTo);
         return returnList;
     }
@@ -178,9 +168,6 @@ public class Surdegshotell {
      */
     public ArrayList<String> createBill(String dough){
         ArrayList<String> returnList = Sorter.getBillStatistics(dough);
-        for (String info : returnList) {
-            System.out.println(info);
-        }
         return returnList;
     }
     
@@ -188,12 +175,7 @@ public class Surdegshotell {
      * 
      * @param price 
      */
-    public void setPrice(String price){
-        try{
-            Sorter.setPrice(Integer.parseInt(price));
-        }
-        catch(Exception e){
-            System.out.println("could not set price");
-        }
+    public void setPrice(String price) throws Exception{
+        Sorter.setPrice(Integer.parseInt(price));
     }
 }
